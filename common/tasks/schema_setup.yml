@@ -1,15 +1,18 @@
-- name: Copy MongoDB repo file 
-  ansible.builtin.copy:
-    src: mongo.repo
-    dest: /etc/yum.repos.d/mongo.repo
+- name: Load MongoDB schema
   when: schema_setup == "mongo"
+  ansible.builtin.block:
+    - name: Copy MongoDB repo file 
+      ansible.builtin.copy:
+       src: mongo.repo
+       dest: /etc/yum.repos.d/mongo/repo
 
-- name: Install MongoDB client
-  ansible.builtin.yum:
-    name: mongodb-org-shell
-    state: installed
-  when: schema_setup == "mongo"
 
-- name: Load schema_setup
-  ansible.builtin.shell: mongo --host {{ lookup('aws_ssm', 'dev.catalogue.mongo_endpoint', region='us-east-1' ) }} </app/schema/{{component}}.js
-  when: schema_setup == "mongo"
+    - name: Install MongoDB client
+      ansible.builtin.yum:
+        name: mongodb-org-shell
+        state: installed
+ 
+
+    - name: Load schema_setup
+      ansible.builtin.shell: mongo --host {{ lookup('aws_ssm', 'dev.catalogue.mongo_endpoint', region='us-east-1' ) }} </app/schema/{{component}}.js
+  
