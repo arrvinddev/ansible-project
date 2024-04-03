@@ -11,10 +11,14 @@
     file: app_prereq.yml
 
 - name: Install Python Dependencies
-  ansible.builtin.import_tasks: 
+  ansible.builtin.shell: pip3.6 install -r requirements.txt
   args: 
     chdir: /app
 
-- name: Include schema schema schema setup 
+- name: Include Schema Setup 
   ansible.builtin.import_tasks:
-    file: systemd_setup.yml
+    file: schema_setup.yml
+
+- name: Include SystemD
+  ansible.builtin.import_tasks:
+    file: systemd_setup.yml 
