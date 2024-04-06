@@ -16,6 +16,7 @@
     - name: Load schema_setup
       ansible.builtin.shell: mongo --host {{ lookup('aws_ssm', '{{ env }}.{{ component }}.mongo_endpoint', region='us-east-1' ) }} </app/schema/{{component}}.js
   
+
 - name: Load MySQL schema
   when: schema_setup == "mysql"
   block:
@@ -23,5 +24,5 @@
       ansible.builtin.yum:
        name: mysql 
     - name: Load Schema
-      ansible.builtin.shell: mysql -h {{ lookup('aws_ssm', '{{ env }}.{{ component }}.db_host', region='us-east-1' ) }} -u{{ lookup('aws_ssm', 'dev.shipping.db_user', region='us-east-1' ) }} -p{{ lookup('aws_ssm', 'dev.shipping.db_pass', region='us-east-1' ) }}
+      ansible.builtin.shell: mysql -h {{ lookup('aws_ssm', '{{ env }}.{{ component }}.db_host', region='us-east-1' ) }} -u{{ lookup('aws_ssm', '{{ env }}.{{ component }}.db_user', region='us-east-1' ) }} -p{{ lookup('aws_ssm', '{{ env }}.{{ component }}.db_pass', region='us-east-1' ) }}
        < /app/schema/{{component}}.sql
