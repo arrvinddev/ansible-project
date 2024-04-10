@@ -3,7 +3,7 @@ filebeat.inputs:
   id: {{ component }}
   enabled: true
   paths:
-    - /var/log/nginx/access.log
+    - {{ log_file }}
 
 output.logstash:
   hosts: ["172.31.41.247:5044"]
