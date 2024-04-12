@@ -1,5 +1,5 @@
 groups:
-- name: example
+- name: ec2-nodes
   rules:
   - alert: HighCPUUtilization
     expr: 100 - (avg by (component,env, instance,job,name) (rate(node_cpu_seconds_total{mode="idle"}[1m]) * 100)) > 30
@@ -8,3 +8,30 @@ groups:
       severity: page
     annotations:
       summary: High CPU Usage
+
+  - alert: HighMemoryUtilization
+    expr: 100 - (100 * ((node_memory_MemFree_bytes + node_memory_Cached_bytes + node_memory_Buffers_bytes ) / node_memory_MemTotal_bytes)) > 30
+    for: 1m
+    labels:
+      severity: page
+    annotations:
+      summary: High Memory Usage
+  
+  - alert: Server Down
+    expr: up < 1
+    for: 1m
+    labels:
+      severity: page
+    annotations:
+      summary: Server Down
+{% for component in components %}
+
+  - alert: Service Down
+    expr: node_systemd_unit_state{component="{{component.name}}", exported_name="{{component.service_name}}.service",state="active"} < 1
+    for: 1m
+    labels:
+      severity: page
+    annotations:
+      summary: {{ component.name}} Component - Service Down
+ {% endfor %}
+
