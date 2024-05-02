@@ -10,10 +10,11 @@
   ansible.builtin.import_tasks:
         file: app_prereq.yml
 
-- name: Install NodeJS dependencies
-  ansible.builtin.shell: npm install 
-  args: 
-    chdir: /app 
+## This step is no more needed and taken care by CI pipeline
+# - name: Install NodeJS dependencies
+#   ansible.builtin.shell: npm install 
+#   args: 
+#     chdir: /app 
 
 - name: Include Schema Setup 
   ansible.builtin.import_tasks:
